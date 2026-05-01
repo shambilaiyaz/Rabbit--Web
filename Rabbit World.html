@@ -1,0 +1,3110 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>🐰 Rabbit World</title>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Nunito:wght@300;400;600;700&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            :root {
+                --cream: #fff8f0;
+                --peach: #ffb347;
+                --rose: #ff6b8a;
+                --lavender: #c084fc;
+                --mint: #34d399;
+                --sky: #38bdf8;
+                --dark: #1e1b2e;
+                --card-bg: rgba(255, 255, 255, 0.95);
+                --text-primary: #1e1b2e;
+                --text-secondary: #888;
+                --border-color: #e5e7eb;
+                --input-bg: #f9fafb;
+            }
+ 
+            [data-theme="dark"] {
+                --card-bg: rgba(30, 27, 46, 0.95);
+                --text-primary: #f0f0f0;
+                --text-secondary: #b0b0b0;
+                --border-color: #444;
+                --input-bg: #2a2740;
+            }
+ 
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            body {
+                font-family: "Nunito", sans-serif;
+                min-height: 100vh;
+                background: linear-gradient(
+                    135deg,
+                    #667eea 0%,
+                    #764ba2 25%,
+                    #f093fb 50%,
+                    #f5576c 75%,
+                    #fda085 100%
+                );
+                background-size: 400% 400%;
+                animation: bgShift 10s ease infinite;
+                overflow-x: hidden;
+                transition: background 0.3s ease;
+            }
+ 
+            [data-theme="dark"] body {
+                background: linear-gradient(
+                    135deg,
+                    #1a1a2e 0%,
+                    #16213e 25%,
+                    #0f3460 50%,
+                    #533483 75%,
+                    #7209b7 100%
+                );
+                background-size: 400% 400%;
+            }
+ 
+            @keyframes bgShift {
+                0% {
+                    background-position: 0% 50%;
+                }
+                50% {
+                    background-position: 100% 50%;
+                }
+                100% {
+                    background-position: 0% 50%;
+                }
+            }
+ 
+            /* FLOATING RABBITS */
+            .rabbits-bg {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+                z-index: 0;
+                overflow: hidden;
+            }
+            .float-rabbit {
+                position: absolute;
+                bottom: -160px;
+                animation: rabbitFloat linear infinite;
+                opacity: 0.55;
+            }
+            .float-rabbit:nth-child(1) {
+                left: 5%;
+                animation-duration: 9s;
+                animation-delay: 0s;
+                width: 55px;
+            }
+            .float-rabbit:nth-child(2) {
+                left: 20%;
+                animation-duration: 7s;
+                animation-delay: 1.5s;
+                width: 38px;
+            }
+            .float-rabbit:nth-child(3) {
+                left: 40%;
+                animation-duration: 11s;
+                animation-delay: 3s;
+                width: 70px;
+            }
+            .float-rabbit:nth-child(4) {
+                left: 62%;
+                animation-duration: 8s;
+                animation-delay: 0.8s;
+                width: 45px;
+            }
+            .float-rabbit:nth-child(5) {
+                left: 80%;
+                animation-duration: 10s;
+                animation-delay: 2s;
+                width: 60px;
+            }
+            .float-rabbit:nth-child(6) {
+                left: 90%;
+                animation-duration: 6s;
+                animation-delay: 4s;
+                width: 32px;
+            }
+            @keyframes rabbitFloat {
+                0% {
+                    transform: translateY(0) rotate(-8deg);
+                    opacity: 0;
+                }
+                10% {
+                    opacity: 0.55;
+                }
+                50% {
+                    transform: translateY(-55vh) rotate(8deg);
+                }
+                90% {
+                    opacity: 0.4;
+                }
+                100% {
+                    transform: translateY(-115vh) rotate(-5deg);
+                    opacity: 0;
+                }
+            }
+ 
+            /* HEADER */
+            header {
+                position: sticky;
+                top: 0;
+                z-index: 100;
+                background: rgba(30, 27, 46, 0.85);
+                backdrop-filter: blur(12px);
+                padding: 14px 30px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+            }
+            .logo {
+                font-family: "Playfair Display", serif;
+                font-size: 1.6rem;
+                color: white;
+                font-weight: 900;
+                text-shadow: 0 0 20px rgba(255, 179, 71, 0.8);
+            }
+            .logo span {
+                color: var(--peach);
+            }
+            .header-controls {
+                display: flex;
+                gap: 15px;
+                align-items: center;
+            }
+            .lang-btns {
+                display: flex;
+                gap: 10px;
+            }
+            .lang-btn {
+                padding: 7px 18px;
+                border: 2px solid rgba(255, 255, 255, 0.4);
+                border-radius: 50px;
+                background: transparent;
+                color: white;
+                font-family: "Nunito", sans-serif;
+                font-size: 0.9rem;
+                font-weight: 700;
+                cursor: pointer;
+                transition: all 0.3s;
+            }
+            .lang-btn:hover,
+            .lang-btn.active {
+                background: var(--peach);
+                border-color: var(--peach);
+                color: var(--dark);
+            }
+ 
+            /* DARK MODE TOGGLE */
+            .theme-toggle {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                border: 2px solid rgba(255, 255, 255, 0.4);
+                background: transparent;
+                color: white;
+                font-size: 1.3rem;
+                cursor: pointer;
+                transition: all 0.3s;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .theme-toggle:hover {
+                background: rgba(255, 179, 71, 0.2);
+                border-color: var(--peach);
+                transform: rotate(15deg);
+            }
+            .theme-toggle:active {
+                transform: rotate(180deg) scale(0.9);
+            }
+ 
+            /* KEYBOARD SHORTCUT PANEL */
+            .shortcut-panel {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 200;
+                background: rgba(30, 27, 46, 0.92);
+                backdrop-filter: blur(12px);
+                border: 1.5px solid rgba(255, 255, 255, 0.15);
+                border-radius: 18px;
+                padding: 14px 18px;
+                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+                min-width: 210px;
+                transition: all 0.3s;
+            }
+            .shortcut-panel.hidden {
+                transform: translateY(calc(100% + 24px));
+                opacity: 0;
+                pointer-events: none;
+            }
+            .sc-title {
+                font-size: 0.75rem;
+                font-weight: 700;
+                color: var(--peach);
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                margin-bottom: 10px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .sc-row {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 7px;
+            }
+            .sc-row:last-child {
+                margin-bottom: 0;
+            }
+            .sc-key {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                background: rgba(255, 255, 255, 0.12);
+                border: 1.5px solid rgba(255, 255, 255, 0.25);
+                border-radius: 7px;
+                padding: 3px 9px;
+                font-size: 0.82rem;
+                font-weight: 700;
+                color: white;
+                min-width: 32px;
+                font-family: monospace;
+                letter-spacing: 0.04em;
+            }
+            .sc-desc {
+                font-size: 0.8rem;
+                color: rgba(255, 255, 255, 0.7);
+            }
+            .sc-toggle-btn {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 201;
+                background: rgba(30, 27, 46, 0.9);
+                border: 1.5px solid rgba(255, 255, 255, 0.2);
+                border-radius: 50px;
+                padding: 8px 16px;
+                color: white;
+                font-size: 0.78rem;
+                font-weight: 700;
+                cursor: pointer;
+                font-family: "Nunito", sans-serif;
+                letter-spacing: 0.05em;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+                transition: all 0.3s;
+                display: none;
+            }
+            .sc-toggle-btn:hover {
+                background: rgba(255, 179, 71, 0.2);
+                border-color: var(--peach);
+            }
+            .sc-hide-btn {
+                background: none;
+                border: none;
+                color: rgba(255, 255, 255, 0.4);
+                cursor: pointer;
+                font-size: 1rem;
+                padding: 0;
+                line-height: 1;
+            }
+            .sc-hide-btn:hover {
+                color: white;
+            }
+ 
+            /* SHORTCUT FLASH TOAST */
+            .sc-toast {
+                position: fixed;
+                top: 80px;
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: 300;
+                background: rgba(30, 27, 46, 0.92);
+                border: 1.5px solid rgba(255, 179, 71, 0.4);
+                border-radius: 50px;
+                padding: 10px 22px;
+                color: white;
+                font-size: 0.88rem;
+                font-weight: 600;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+                opacity: 0;
+                transition: opacity 0.25s;
+                pointer-events: none;
+                white-space: nowrap;
+            }
+            .sc-toast.show {
+                opacity: 1;
+            }
+ 
+            /* CARD */
+            .card {
+                position: relative;
+                z-index: 10;
+                background: var(--card-bg);
+                max-width: 550px;
+                margin: 40px auto;
+                padding: 40px 36px;
+                border-radius: 28px;
+                box-shadow:
+                    0 20px 60px rgba(0, 0, 0, 0.25),
+                    0 0 0 1px rgba(255, 255, 255, 0.4);
+                backdrop-filter: blur(10px);
+                animation: slideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+                transition: background 0.3s ease;
+            }
+            .card.wide {
+                max-width: 800px;
+            }
+            @keyframes slideUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(40px) scale(0.95);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0) scale(1);
+                }
+            }
+            .card h2 {
+                font-family: "Playfair Display", serif;
+                font-size: 2rem;
+                color: var(--text-primary);
+                margin-bottom: 8px;
+                text-align: center;
+                transition: color 0.3s ease;
+            }
+            .card p.sub {
+                text-align: center;
+                color: var(--text-secondary);
+                font-size: 0.95rem;
+                margin-bottom: 28px;
+                transition: color 0.3s ease;
+            }
+ 
+            /* INPUTS */
+            .input-group {
+                margin-bottom: 18px;
+                position: relative;
+            }
+            .input-group label {
+                display: block;
+                font-weight: 700;
+                color: var(--text-primary);
+                font-size: 0.85rem;
+                margin-bottom: 6px;
+                letter-spacing: 0.05em;
+                text-transform: uppercase;
+                transition: color 0.3s ease;
+            }
+            .input-group input {
+                width: 100%;
+                padding: 13px 18px;
+                border: 2px solid var(--border-color);
+                border-radius: 14px;
+                font-family: "Nunito", sans-serif;
+                font-size: 1rem;
+                background: var(--input-bg);
+                transition: all 0.3s;
+                outline: none;
+                color: var(--text-primary);
+            }
+            .input-group input:focus {
+                border-color: var(--lavender);
+                background: var(--card-bg);
+                box-shadow: 0 0 0 4px rgba(192, 132, 252, 0.15);
+            }
+            .hint-text {
+                font-size: 0.8rem;
+                color: var(--text-secondary);
+                margin-top: 5px;
+                margin-bottom: 14px;
+                text-align: center;
+                transition: color 0.3s ease;
+            }
+            .hint-text span {
+                color: var(--rose);
+                font-weight: 700;
+            }
+ 
+            /* CHECKBOX */
+            .checkbox-group {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 20px;
+                padding: 12px 18px;
+                border-radius: 12px;
+                background: rgba(192, 132, 252, 0.08);
+                border: 1.5px solid rgba(192, 132, 252, 0.2);
+                transition: all 0.3s;
+            }
+            .checkbox-group:hover {
+                background: rgba(192, 132, 252, 0.12);
+                border-color: rgba(192, 132, 252, 0.35);
+            }
+            .checkbox-group input[type="checkbox"] {
+                width: 20px;
+                height: 20px;
+                cursor: pointer;
+                accent-color: var(--lavender);
+            }
+            .checkbox-group label {
+                font-size: 0.95rem;
+                font-weight: 600;
+                color: var(--text-primary);
+                cursor: pointer;
+                user-select: none;
+            }
+ 
+            /* BUTTONS */
+            .btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                padding: 13px 28px;
+                border-radius: 50px;
+                border: none;
+                font-family: "Nunito", sans-serif;
+                font-size: 1rem;
+                font-weight: 700;
+                cursor: pointer;
+                transition: all 0.3s;
+                text-decoration: none;
+            }
+            .btn-primary {
+                background: linear-gradient(
+                    135deg,
+                    var(--rose),
+                    var(--lavender)
+                );
+                color: white;
+                width: 100%;
+                box-shadow: 0 4px 20px rgba(255, 107, 138, 0.4);
+            }
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 30px rgba(255, 107, 138, 0.5);
+            }
+            .btn-primary:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+                transform: none;
+            }
+            .btn-success {
+                background: linear-gradient(135deg, var(--mint), var(--sky));
+                color: white;
+                width: 100%;
+                box-shadow: 0 6px 25px rgba(52, 211, 153, 0.5);
+                font-size: 1.3rem;
+                padding: 18px 32px;
+                animation: pulseGlow 2s ease infinite;
+            }
+            .btn-success:hover {
+                transform: translateY(-3px) scale(1.02);
+                box-shadow: 0 10px 35px rgba(52, 211, 153, 0.6);
+            }
+            @keyframes pulseGlow {
+                0%,
+                100% {
+                    box-shadow: 0 6px 25px rgba(52, 211, 153, 0.5);
+                }
+                50% {
+                    box-shadow: 0 8px 35px rgba(52, 211, 153, 0.7);
+                }
+            }
+            .btn-secondary {
+                background: linear-gradient(135deg, var(--peach), #ff6b35);
+                color: white;
+                box-shadow: 0 4px 15px rgba(255, 179, 71, 0.4);
+            }
+            .btn-secondary:hover {
+                transform: translateY(-2px);
+            }
+            .btn-mint {
+                background: linear-gradient(135deg, var(--mint), var(--sky));
+                color: white;
+                box-shadow: 0 4px 15px rgba(52, 211, 153, 0.4);
+            }
+            .btn-mint:hover {
+                transform: translateY(-2px);
+            }
+            .btn-ghost {
+                background: rgba(30, 27, 46, 0.08);
+                color: var(--text-primary);
+                transition: all 0.3s ease;
+            }
+            .btn-ghost:hover {
+                background: rgba(30, 27, 46, 0.15);
+            }
+            [data-theme="dark"] .btn-ghost {
+                background: rgba(255, 255, 255, 0.08);
+                color: var(--text-primary);
+            }
+            [data-theme="dark"] .btn-ghost:hover {
+                background: rgba(255, 255, 255, 0.15);
+            }
+            .btn-danger {
+                background: linear-gradient(135deg, #f87171, #ef4444);
+                color: white;
+                box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+            }
+            .btn-danger:hover {
+                transform: translateY(-2px);
+            }
+            .btn-share {
+                background: linear-gradient(135deg, #8b5cf6, #6366f1);
+                color: white;
+                box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+            }
+            .btn-share:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5);
+            }
+            .btn-row {
+                display: flex;
+                gap: 12px;
+                flex-wrap: wrap;
+                justify-content: center;
+                margin-top: 16px;
+            }
+ 
+            /* AI RESPONSE */
+            .ai-response {
+                margin-top: 20px;
+                padding: 15px;
+                background: var(--input-bg);
+                border-radius: 12px;
+                border: 2px solid var(--border-color);
+                min-height: 100px;
+                color: var(--text-primary);
+                transition: all 0.3s ease;
+            }
+ 
+            /* SHORTCUT BUTTON */
+            .btn-shortcut {
+                display: block;
+                margin-top: 12px;
+                padding: 6px 14px;
+                background: rgba(255, 179, 71, 0.2);
+                border: 1.5px solid rgba(255, 179, 71, 0.5);
+                border-radius: 20px;
+                color: var(--text-primary);
+                font-size: 0.75rem;
+                font-weight: 600;
+                cursor: pointer;
+                font-family: "Nunito", sans-serif;
+                transition: all 0.3s;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .btn-shortcut:hover {
+                background: rgba(255, 179, 71, 0.4);
+                border-color: var(--peach);
+            }
+ 
+            /* MODAL */
+            .modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+            }
+            .modal-content {
+                background: var(--card-bg);
+                border-radius: 20px;
+                padding: 30px;
+                max-width: 400px;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+                animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            }
+            .modal-content h3 {
+                font-size: 1.5rem;
+                color: var(--text-primary);
+                margin-bottom: 10px;
+                font-family: "Playfair Display", serif;
+            }
+            .modal-content p {
+                color: var(--text-secondary);
+                margin-bottom: 15px;
+            }
+ 
+            /* PAGES */
+            #page-login,
+            #page-home,
+            #page-videos,
+            #page-quiz,
+            #page-ai {
+                display: none;
+            }
+ 
+            /* RABBIT IMAGE */
+            .rabbit-img {
+                width: 100%;
+                max-width: 420px;
+                border-radius: 20px;
+                display: block;
+                margin: 0 auto 24px;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            }
+ 
+            /* INFO CARDS */
+            .info-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 14px;
+                margin: 20px 0;
+            }
+            .info-card {
+                background: linear-gradient(
+                    135deg,
+                    rgba(255, 179, 71, 0.1),
+                    rgba(192, 132, 252, 0.1)
+                );
+                border: 1.5px solid rgba(192, 132, 252, 0.25);
+                border-radius: 16px;
+                padding: 16px;
+                transition: transform 0.2s;
+            }
+            [data-theme="dark"] .info-card {
+                background: linear-gradient(
+                    135deg,
+                    rgba(255, 179, 71, 0.15),
+                    rgba(192, 132, 252, 0.15)
+                );
+                border-color: rgba(192, 132, 252, 0.4);
+            }
+            .info-card:hover {
+                transform: translateY(-3px);
+            }
+            .info-card .ic-title {
+                font-weight: 700;
+                font-size: 0.85rem;
+                color: var(--rose);
+                text-transform: uppercase;
+                letter-spacing: 0.06em;
+                margin-bottom: 6px;
+            }
+            .info-card p {
+                font-size: 0.88rem;
+                color: var(--text-secondary);
+                line-height: 1.55;
+                transition: color 0.3s ease;
+            }
+ 
+            /* VIDEO PAGE */
+            .video-options {
+                display: flex;
+                flex-direction: column;
+                gap: 14px;
+                margin: 24px 0;
+            }
+            .video-option {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                padding: 18px 22px;
+                border-radius: 18px;
+                background: linear-gradient(
+                    135deg,
+                    rgba(255, 255, 255, 0.9),
+                    rgba(255, 255, 255, 0.7)
+                );
+                border: 2px solid rgba(192, 132, 252, 0.25);
+                cursor: pointer;
+                transition: all 0.3s;
+                text-decoration: none;
+                color: var(--text-primary);
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            }
+            [data-theme="dark"] .video-option {
+                background: linear-gradient(
+                    135deg,
+                    rgba(30, 27, 46, 0.7),
+                    rgba(30, 27, 46, 0.5)
+                );
+                border-color: rgba(192, 132, 252, 0.4);
+            }
+            .video-option:hover {
+                transform: translateX(6px);
+                border-color: var(--lavender);
+                box-shadow: 0 8px 25px rgba(192, 132, 252, 0.25);
+            }
+            .vo-num {
+                width: 42px;
+                height: 42px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-family: "Playfair Display", serif;
+                font-weight: 900;
+                font-size: 1.2rem;
+                color: white;
+                flex-shrink: 0;
+            }
+            .vo-num-1 {
+                background: linear-gradient(
+                    135deg,
+                    var(--rose),
+                    var(--lavender)
+                );
+            }
+            .vo-num-2 {
+                background: linear-gradient(135deg, var(--mint), var(--sky));
+            }
+            .vo-num-3 {
+                background: linear-gradient(135deg, var(--peach), #ff6b35);
+            }
+            .vo-text strong {
+                display: block;
+                font-weight: 700;
+                font-size: 1rem;
+                margin-bottom: 2px;
+            }
+            .vo-text span {
+                font-size: 0.82rem;
+                color: var(--text-secondary);
+                transition: color 0.3s ease;
+            }
+ 
+            /* QUIZ STYLES */
+            .quiz-container {
+                text-align: left;
+            }
+            .question-card {
+                background: white;
+                border-radius: 16px;
+                padding: 20px;
+                margin-bottom: 20px;
+                border: 2px solid #eee;
+                transition: all 0.3s;
+            }
+            [data-theme="dark"] .question-card {
+                background: rgba(255, 255, 255, 0.05);
+                border-color: rgba(255, 255, 255, 0.1);
+            }
+            .question-card:hover {
+                border-color: var(--lavender);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            }
+            .q-text {
+                font-weight: 700;
+                font-size: 1.1rem;
+                color: var(--text-primary);
+                margin-bottom: 15px;
+                transition: color 0.3s ease;
+            }
+            .q-text span {
+                color: var(--rose);
+                margin-right: 8px;
+            }
+            .options-grid {
+                display: grid;
+                gap: 10px;
+            }
+            .option-label {
+                display: flex;
+                align-items: center;
+                padding: 12px 15px;
+                border-radius: 10px;
+                border: 2px solid #f0f0f0;
+                cursor: pointer;
+                transition: all 0.2s;
+                font-size: 0.95rem;
+            }
+            [data-theme="dark"] .option-label {
+                border-color: rgba(255, 255, 255, 0.1);
+            }
+            .option-label:hover {
+                background: #f9fafb;
+                border-color: var(--peach);
+            }
+            [data-theme="dark"] .option-label:hover {
+                background: rgba(255, 255, 255, 0.05);
+            }
+            .option-label input {
+                margin-right: 12px;
+                accent-color: var(--rose);
+                transform: scale(1.2);
+            }
+            .option-label.selected {
+                background: rgba(255, 107, 138, 0.05);
+                border-color: var(--rose);
+            }
+ 
+            .result-box {
+                text-align: center;
+                padding: 30px;
+                background: linear-gradient(
+                    135deg,
+                    rgba(52, 211, 153, 0.1),
+                    rgba(56, 189, 248, 0.1)
+                );
+                border-radius: 20px;
+                border: 2px solid var(--mint);
+                margin-top: 20px;
+                display: none;
+            }
+            [data-theme="dark"] .result-box {
+                background: linear-gradient(
+                    135deg,
+                    rgba(52, 211, 153, 0.15),
+                    rgba(56, 189, 248, 0.15)
+                );
+            }
+            .score-big {
+                font-family: "Playfair Display", serif;
+                font-size: 3rem;
+                color: var(--mint);
+                font-weight: 900;
+                margin: 10px 0;
+            }
+            .score-msg {
+                font-size: 1.1rem;
+                color: var(--text-secondary);
+                margin-bottom: 20px;
+                transition: color 0.3s ease;
+            }
+ 
+            /* VOICE BAR */
+            .voice-bar {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                margin: 14px 0;
+                padding: 10px 20px;
+                border-radius: 50px;
+                background: rgba(52, 211, 153, 0.12);
+                border: 1.5px solid rgba(52, 211, 153, 0.3);
+                font-size: 0.88rem;
+                color: #059669;
+                font-weight: 600;
+                transition: all 0.3s;
+            }
+            .voice-bar.off {
+                background: rgba(0, 0, 0, 0.04);
+                border-color: #ddd;
+                color: #aaa;
+            }
+            [data-theme="dark"] .voice-bar.off {
+                background: rgba(255, 255, 255, 0.04);
+                border-color: rgba(255, 255, 255, 0.2);
+            }
+            .pulse-dot {
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background: var(--mint);
+                animation: pulse 1s ease infinite;
+            }
+            .voice-bar.off .pulse-dot {
+                background: #ff4757;
+                animation: none;
+            }
+            @keyframes pulse {
+                0%,
+                100% {
+                    transform: scale(1);
+                    opacity: 1;
+                }
+                50% {
+                    transform: scale(1.5);
+                    opacity: 0.5;
+                }
+            }
+ 
+            /* WELCOME BANNER */
+            .welcome-banner {
+                text-align: center;
+                margin-bottom: 20px;
+                padding: 14px 20px;
+                border-radius: 16px;
+                background: linear-gradient(
+                    135deg,
+                    rgba(255, 107, 138, 0.12),
+                    rgba(192, 132, 252, 0.12)
+                );
+                border: 1.5px solid rgba(255, 107, 138, 0.2);
+            }
+            [data-theme="dark"] .welcome-banner {
+                background: linear-gradient(
+                    135deg,
+                    rgba(255, 107, 138, 0.18),
+                    rgba(192, 132, 252, 0.18)
+                );
+                border-color: rgba(255, 107, 138, 0.3);
+            }
+            .welcome-banner h2 {
+                font-size: 1.5rem;
+                color: var(--text-primary);
+            }
+            .welcome-banner span {
+                color: var(--rose);
+            }
+ 
+            /* SHARE MODAL */
+            .share-modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.7);
+                display: none;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+                animation: fadeIn 0.3s ease;
+            }
+            .share-modal.show {
+                display: flex;
+            }
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
+            }
+            .share-content {
+                background: var(--card-bg);
+                padding: 35px 40px;
+                border-radius: 24px;
+                max-width: 450px;
+                width: 90%;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+                animation: slideUpModal 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+                position: relative;
+            }
+            @keyframes slideUpModal {
+                from {
+                    transform: translateY(50px) scale(0.9);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateY(0) scale(1);
+                    opacity: 1;
+                }
+            }
+            .share-content h3 {
+                font-family: "Playfair Display", serif;
+                font-size: 1.6rem;
+                color: var(--text-primary);
+                margin-bottom: 20px;
+                text-align: center;
+            }
+            .share-preview {
+                background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+                padding: 25px;
+                border-radius: 16px;
+                color: white;
+                margin-bottom: 20px;
+                text-align: center;
+            }
+            .share-preview h4 {
+                font-size: 1.2rem;
+                margin-bottom: 10px;
+            }
+            .share-preview .score {
+                font-family: "Playfair Display", serif;
+                font-size: 2.5rem;
+                font-weight: 900;
+                margin: 10px 0;
+            }
+            .share-preview p {
+                font-size: 0.9rem;
+                opacity: 0.95;
+            }
+            .share-buttons {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                margin-bottom: 15px;
+            }
+            .share-btn {
+                padding: 12px 20px;
+                border-radius: 12px;
+                border: none;
+                font-family: "Nunito", sans-serif;
+                font-size: 0.9rem;
+                font-weight: 700;
+                cursor: pointer;
+                transition: all 0.3s;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+            }
+            .share-btn.twitter {
+                background: #1da1f2;
+                color: white;
+            }
+            .share-btn.facebook {
+                background: #1877f2;
+                color: white;
+            }
+            .share-btn.whatsapp {
+                background: #25d366;
+                color: white;
+            }
+            .share-btn.copy {
+                background: var(--lavender);
+                color: white;
+                grid-column: span 2;
+            }
+            .share-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            }
+            .close-modal {
+                position: absolute;
+                top: 15px;
+                right: 15px;
+                background: none;
+                border: none;
+                font-size: 1.5rem;
+                color: var(--text-secondary);
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+            .close-modal:hover {
+                color: var(--text-primary);
+                transform: rotate(90deg);
+            }
+ 
+            @media (max-width: 600px) {
+                .card {
+                    margin: 20px 14px;
+                    padding: 28px 20px;
+                }
+                .info-grid {
+                    grid-template-columns: 1fr;
+                }
+                header {
+                    padding: 12px 16px;
+                }
+                .header-controls {
+                    gap: 10px;
+                }
+                .theme-toggle {
+                    width: 42px;
+                    height: 42px;
+                    font-size: 1.1rem;
+                }
+                .shortcut-panel {
+                    bottom: 14px;
+                    right: 14px;
+                }
+                .share-buttons {
+                    grid-template-columns: 1fr;
+                }
+                .share-btn.copy {
+                    grid-column: span 1;
+                }
+            }
+            .error-msg {
+                color: var(--rose);
+                font-size: 0.9rem;
+                text-align: center;
+                margin-top: 12px;
+                padding: 12px 18px;
+                background: rgba(255, 107, 138, 0.1);
+                border: 1.5px solid rgba(255, 107, 138, 0.3);
+                border-radius: 12px;
+                display: none;
+                font-weight: 600;
+            }
+            .success-msg {
+                color: var(--mint);
+                font-size: 0.9rem;
+                text-align: center;
+                margin-top: 12px;
+                padding: 12px 18px;
+                background: rgba(52, 211, 153, 0.1);
+                border: 1.5px solid rgba(52, 211, 153, 0.3);
+                border-radius: 12px;
+                display: none;
+                font-weight: 600;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- FLOATING RABBITS -->
+        <div class="rabbits-bg">
+            <div class="float-rabbit">
+                <svg viewBox="0 0 80 100" xmlns="http://www.w3.org/2000/svg">
+                    <ellipse
+                        cx="25"
+                        cy="22"
+                        rx="8"
+                        ry="22"
+                        fill="white"
+                        opacity="0.9"
+                        transform="rotate(-10,25,22)"
+                    />
+                    <ellipse
+                        cx="25"
+                        cy="22"
+                        rx="4.5"
+                        ry="16"
+                        fill="#ffccd5"
+                        opacity="0.8"
+                        transform="rotate(-10,25,22)"
+                    />
+                    <ellipse
+                        cx="50"
+                        cy="20"
+                        rx="8"
+                        ry="22"
+                        fill="white"
+                        opacity="0.9"
+                        transform="rotate(10,50,20)"
+                    />
+                    <ellipse
+                        cx="50"
+                        cy="20"
+                        rx="4.5"
+                        ry="16"
+                        fill="#ffccd5"
+                        opacity="0.8"
+                        transform="rotate(10,50,20)"
+                    />
+                    <ellipse
+                        cx="38"
+                        cy="55"
+                        rx="22"
+                        ry="26"
+                        fill="white"
+                        opacity="0.95"
+                    />
+                    <ellipse
+                        cx="38"
+                        cy="60"
+                        rx="12"
+                        ry="16"
+                        fill="#fef0f3"
+                        opacity="0.8"
+                    />
+                    <ellipse
+                        cx="38"
+                        cy="40"
+                        rx="18"
+                        ry="17"
+                        fill="white"
+                        opacity="0.95"
+                    />
+                    <circle
+                        cx="31"
+                        cy="37"
+                        r="3.5"
+                        fill="#1a1a2e"
+                        opacity="0.8"
+                    />
+                    <circle
+                        cx="45"
+                        cy="37"
+                        r="3.5"
+                        fill="#1a1a2e"
+                        opacity="0.8"
+                    />
+                    <circle cx="32" cy="36" r="1.3" fill="white" />
+                    <circle cx="46" cy="36" r="1.3" fill="white" />
+                    <ellipse
+                        cx="38"
+                        cy="45"
+                        rx="3"
+                        ry="2.5"
+                        fill="#ffb3c1"
+                        opacity="0.9"
+                    />
+                    <ellipse
+                        cx="29"
+                        cy="41"
+                        rx="6"
+                        ry="4"
+                        fill="#ffb3c1"
+                        opacity="0.2"
+                    />
+                    <ellipse
+                        cx="47"
+                        cy="41"
+                        rx="6"
+                        ry="4"
+                        fill="#ffb3c1"
+                        opacity="0.2"
+                    />
+                    <circle cx="22" cy="65" r="8" fill="white" opacity="0.8" />
+                </svg>
+            </div>
+            <div class="float-rabbit">
+                <svg viewBox="0 0 80 100" xmlns="http://www.w3.org/2000/svg">
+                    <ellipse
+                        cx="25"
+                        cy="22"
+                        rx="8"
+                        ry="22"
+                        fill="white"
+                        opacity="0.9"
+                        transform="rotate(-10,25,22)"
+                    />
+                    <ellipse
+                        cx="25"
+                        cy="22"
+                        rx="4.5"
+                        ry="16"
+                        fill="#ffccd5"
+                        opacity="0.8"
+                        transform="rotate(-10,25,22)"
+                    />
+                    <ellipse
+                        cx="50"
+                        cy="20"
+                        rx="8"
+                        ry="22"
+                        fill="white"
+                        opacity="0.9"
+                        transform="rotate(10,50,20)"
+                    />
+                    <ellipse
+                        cx="50"
+                        cy="20"
+                        rx="4.5"
+                        ry="16"
+                        fill="#ffccd5"
+                        opacity="0.8"
+                        transform="rotate(10,50,20)"
+                    />
+                    <ellipse
+                        cx="38"
+                        cy="55"
+                        rx="22"
+                        ry="26"
+                        fill="white"
+                        opacity="0.95"
+                    />
+                    <ellipse
+                        cx="38"
+                        cy="60"
+                        rx="12"
+                        ry="16"
+                        fill="#fef0f3"
+                        opacity="0.8"
+                    />
+                    <ellipse
+                        cx="38"
+                        cy="40"
+                        rx="18"
+                        ry="17"
+                        fill="white"
+                        opacity="0.95"
+                    />
+                    <circle
+                        cx="31"
+                        cy="37"
+                        r="3.5"
+                        fill="#1a1a2e"
+                        opacity="0.8"
+                    />
+                    <circle
+                        cx="45"
+                        cy="37"
+                        r="3.5"
+                        fill="#1a1a2e"
+                        opacity="0.8"
+                    />
+                    <circle cx="32" cy="36" r="1.3" fill="white" />
+                    <circle cx="46" cy="36" r="1.3" fill="white" />
+                    <ellipse
+                        cx="38"
+                        cy="45"
+                        rx="3"
+                        ry="2.5"
+                        fill="#ffb3c1"
+                        opacity="0.9"
+                    />
+                    <ellipse
+                        cx="29"
+                        cy="41"
+                        rx="6"
+                        ry="4"
+                        fill="#ffb3c1"
+                        opacity="0.2"
+                    />
+                    <ellipse
+                        cx="47"
+                        cy="41"
+                        rx="6"
+                        ry="4"
+                        fill="#ffb3c1"
+                        opacity="0.2"
+                    />
+                    <circle cx="22" cy="65" r="8" fill="white" opacity="0.8" />
+                </svg>
+            </div>
+            <div class="float-rabbit">
+                <svg viewBox="0 0 80 100" xmlns="http://www.w3.org/2000/svg">
+                    <ellipse
+                        cx="25"
+                        cy="22"
+                        rx="8"
+                        ry="22"
+                        fill="white"
+                        opacity="0.9"
+                        transform="rotate(-10,25,22)"
+                    />
+                    <ellipse
+                        cx="25"
+                        cy="22"
+                        rx="4.5"
+                        ry="16"
+                        fill="#ffccd5"
+                        opacity="0.8"
+                        transform="rotate(-10,25,22)"
+                    />
+                    <ellipse
+                        cx="50"
+                        cy="20"
+                        rx="8"
+                        ry="22"
+                        fill="white"
+                        opacity="0.9"
+                        transform="rotate(10,50,20)"
+                    />
+                    <ellipse
+                        cx="50"
+                        cy="20"
+                        rx="4.5"
+                        ry="16"
+                        fill="#ffccd5"
+                        opacity="0.8"
+                        transform="rotate(10,50,20)"
+                    />
+                    <ellipse
+                        cx="38"
+                        cy="55"
+                        rx="22"
+                        ry="26"
+                        fill="white"
+                        opacity="0.95"
+                    />
+                    <ellipse
+                        cx="38"
+                        cy="60"
+                        rx="12"
+                        ry="16"
+                        fill="#fef0f3"
+                        opacity="0.8"
+                    />
+                    <ellipse
+                        cx="38"
+                        cy="40"
+                        rx="18"
+                        ry="17"
+                        fill="white"
+                        opacity="0.95"
+                    />
+                    <circle
+                        cx="31"
+                        cy="37"
+                        r="3.5"
+                        fill="#1a1a2e"
+                        opacity="0.8"
+                    />
+                    <circle
+                        cx="45"
+                        cy="37"
+                        r="3.5"
+                        fill="#1a1a2e"
+                        opacity="0.8"
+                    />
+                    <circle cx="32" cy="36" r="1.3" fill="white" />
+                    <circle cx="46" cy="36" r="1.3" fill="white" />
+                    <ellipse
+                        cx="38"
+                        cy="45"
+                        rx="3"
+                        ry="2.5"
+                        fill="#ffb3c1"
+                        opacity="0.9"
+                    />
+                    <ellipse
+                        cx="29"
+                        cy="41"
+                        rx="6"
+                        ry="4"
+                        fill="#ffb3c1"
+                        opacity="0.2"
+                    />
+                    <ellipse
+                        cx="47"
+                        cy="41"
+                        rx="6"
+                        ry="4"
+                        fill="#ffb3c1"
+                        opacity="0.2"
+                    />
+                    <circle cx="22" cy="65" r="8" fill="white" opacity="0.8" />
+                </svg>
+            </div>
+            <div class="float-rabbit">
+                <svg viewBox="0 0 80 100" xmlns="http://www.w3.org/2000/svg">
+                    <ellipse
+                        cx="25"
+                        cy="22"
+                        rx="8"
+                        ry="22"
+                        fill="white"
+                        opacity="0.9"
+                        transform="rotate(-10,25,22)"
+                    />
+                    <ellipse
+                        cx="25"
+                        cy="22"
+                        rx="4.5"
+                        ry="16"
+                        fill="#ffccd5"
+                        opacity="0.8"
+                        transform="rotate(-10,25,22)"
+                    />
+                    <ellipse
+                        cx="50"
+                        cy="20"
+                        rx="8"
+                        ry="22"
+                        fill="white"
+                        opacity="0.9"
+                        transform="rotate(10,50,20)"
+                    />
+                    <ellipse
+                        cx="50"
+                        cy="20"
+                        rx="4.5"
+                        ry="16"
+                        fill="#ffccd5"
+                        opacity="0.8"
+                        transform="rotate(10,50,20)"
+                    />
+                    <ellipse
+                        cx="38"
+                        cy="55"
+                        rx="22"
+                        ry="26"
+                        fill="white"
+                        opacity="0.95"
+                    />
+                    <ellipse
+                        cx="38"
+                        cy="60"
+                        rx="12"
+                        ry="16"
+                        fill="#fef0f3"
+                        opacity="0.8"
+                    />
+                    <ellipse
+                        cx="38"
+                        cy="40"
+                        rx="18"
+                        ry="17"
+                        fill="white"
+                        opacity="0.95"
+                    />
+                    <circle
+                        cx="31"
+                        cy="37"
+                        r="3.5"
+                        fill="#1a1a2e"
+                        opacity="0.8"
+                    />
+                    <circle
+                        cx="45"
+                        cy="37"
+                        r="3.5"
+                        fill="#1a1a2e"
+                        opacity="0.8"
+                    />
+                    <circle cx="32" cy="36" r="1.3" fill="white" />
+                    <circle cx="46" cy="36" r="1.3" fill="white" />
+                    <ellipse
+                        cx="38"
+                        cy="45"
+                        rx="3"
+                        ry="2.5"
+                        fill="#ffb3c1"
+                        opacity="0.9"
+                    />
+                    <ellipse
+                        cx="29"
+                        cy="41"
+                        rx="6"
+                        ry="4"
+                        fill="#ffb3c1"
+                        opacity="0.2"
+                    />
+                    <ellipse
+                        cx="47"
+                        cy="41"
+                        rx="6"
+                        ry="4"
+                        fill="#ffb3c1"
+                        opacity="0.2"
+                    />
+                    <circle cx="22" cy="65" r="8" fill="white" opacity="0.8" />
+                </svg>
+            </div>
+            <div class="float-rabbit">
+                <svg viewBox="0 0 80 100" xmlns="http://www.w3.org/2000/svg">
+                    <ellipse
+                        cx="25"
+                        cy="22"
+                        rx="8"
+                        ry="22"
+                        fill="white"
+                        opacity="0.9"
+                        transform="rotate(-10,25,22)"
+                    />
+                    <ellipse
+                        cx="25"
+                        cy="22"
+                        rx="4.5"
+                        ry="16"
+                        fill="#ffccd5"
+                        opacity="0.8"
+                        transform="rotate(-10,25,22)"
+                    />
+                    <ellipse
+                        cx="50"
+                        cy="20"
+                        rx="8"
+                        ry="22"
+                        fill="white"
+                        opacity="0.9"
+                        transform="rotate(10,50,20)"
+                    />
+                    <ellipse
+                        cx="50"
+                        cy="20"
+                        rx="4.5"
+                        ry="16"
+                        fill="#ffccd5"
+                        opacity="0.8"
+                        transform="rotate(10,50,20)"
+                    />
+                    <ellipse
+                        cx="38"
+                        cy="55"
+                        rx="22"
+                        ry="26"
+                        fill="white"
+                        opacity="0.95"
+                    />
+                    <ellipse
+                        cx="38"
+                        cy="60"
+                        rx="12"
+                        ry="16"
+                        fill="#fef0f3"
+                        opacity="0.8"
+                    />
+                    <ellipse
+                        cx="38"
+                        cy="40"
+                        rx="18"
+                        ry="17"
+                        fill="white"
+                        opacity="0.95"
+                    />
+                    <circle
+                        cx="31"
+                        cy="37"
+                        r="3.5"
+                        fill="#1a1a2e"
+                        opacity="0.8"
+                    />
+                    <circle
+                        cx="45"
+                        cy="37"
+                        r="3.5"
+                        fill="#1a1a2e"
+                        opacity="0.8"
+                    />
+                    <circle cx="32" cy="36" r="1.3" fill="white" />
+                    <circle cx="46" cy="36" r="1.3" fill="white" />
+                    <ellipse
+                        cx="38"
+                        cy="45"
+                        rx="3"
+                        ry="2.5"
+                        fill="#ffb3c1"
+                        opacity="0.9"
+                    />
+                    <ellipse
+                        cx="29"
+                        cy="41"
+                        rx="6"
+                        ry="4"
+                        fill="#ffb3c1"
+                        opacity="0.2"
+                    />
+                    <ellipse
+                        cx="47"
+                        cy="41"
+                        rx="6"
+                        ry="4"
+                        fill="#ffb3c1"
+                        opacity="0.2"
+                    />
+                    <circle cx="22" cy="65" r="8" fill="white" opacity="0.8" />
+                </svg>
+            </div>
+            <div class="float-rabbit">
+                <svg viewBox="0 0 80 100" xmlns="http://www.w3.org/2000/svg">
+                    <ellipse
+                        cx="25"
+                        cy="22"
+                        rx="8"
+                        ry="22"
+                        fill="white"
+                        opacity="0.9"
+                        transform="rotate(-10,25,22)"
+                    />
+                    <ellipse
+                        cx="25"
+                        cy="22"
+                        rx="4.5"
+                        ry="16"
+                        fill="#ffccd5"
+                        opacity="0.8"
+                        transform="rotate(-10,25,22)"
+                    />
+                    <ellipse
+                        cx="50"
+                        cy="20"
+                        rx="8"
+                        ry="22"
+                        fill="white"
+                        opacity="0.9"
+                        transform="rotate(10,50,20)"
+                    />
+                    <ellipse
+                        cx="50"
+                        cy="20"
+                        rx="4.5"
+                        ry="16"
+                        fill="#ffccd5"
+                        opacity="0.8"
+                        transform="rotate(10,50,20)"
+                    />
+                    <ellipse
+                        cx="38"
+                        cy="55"
+                        rx="22"
+                        ry="26"
+                        fill="white"
+                        opacity="0.95"
+                    />
+                    <ellipse
+                        cx="38"
+                        cy="60"
+                        rx="12"
+                        ry="16"
+                        fill="#fef0f3"
+                        opacity="0.8"
+                    />
+                    <ellipse
+                        cx="38"
+                        cy="40"
+                        rx="18"
+                        ry="17"
+                        fill="white"
+                        opacity="0.95"
+                    />
+                    <circle
+                        cx="31"
+                        cy="37"
+                        r="3.5"
+                        fill="#1a1a2e"
+                        opacity="0.8"
+                    />
+                    <circle
+                        cx="45"
+                        cy="37"
+                        r="3.5"
+                        fill="#1a1a2e"
+                        opacity="0.8"
+                    />
+                    <circle cx="32" cy="36" r="1.3" fill="white" />
+                    <circle cx="46" cy="36" r="1.3" fill="white" />
+                    <ellipse
+                        cx="38"
+                        cy="45"
+                        rx="3"
+                        ry="2.5"
+                        fill="#ffb3c1"
+                        opacity="0.9"
+                    />
+                    <ellipse
+                        cx="29"
+                        cy="41"
+                        rx="6"
+                        ry="4"
+                        fill="#ffb3c1"
+                        opacity="0.2"
+                    />
+                    <ellipse
+                        cx="47"
+                        cy="41"
+                        rx="6"
+                        ry="4"
+                        fill="#ffb3c1"
+                        opacity="0.2"
+                    />
+                    <circle cx="22" cy="65" r="8" fill="white" opacity="0.8" />
+                </svg>
+            </div>
+        </div>
+ 
+        <!-- KEYBOARD SHORTCUT PANEL (bottom right) -->
+        <div class="shortcut-panel hidden" id="scPanel">
+            <div class="sc-title">
+                ⌨️ Keyboard Shortcuts
+                <button
+                    class="sc-hide-btn"
+                    onclick="hideShortcuts()"
+                    title="Hide"
+                >
+                    ✕
+                </button>
+            </div>
+            <div class="sc-row">
+                <span class="sc-key">R</span
+                ><span class="sc-desc">Read for me / Stop Reading</span>
+            </div>
+            <div class="sc-row">
+                <span class="sc-key">V</span
+                ><span class="sc-desc">Go to Videos</span>
+            </div>
+            <div class="sc-row">
+                <span class="sc-key">Q</span
+                ><span class="sc-desc">Take Rabbit Quiz</span>
+            </div>
+            <div class="sc-row">
+                <span class="sc-key">A</span
+                ><span class="sc-desc">Go to AI</span>
+            </div>
+            <div class="sc-row">
+                <span class="sc-key">H</span
+                ><span class="sc-desc">Go to Home</span>
+            </div>
+            <div class="sc-row">
+                <span class="sc-key">L</span><span class="sc-desc">Logout</span>
+            </div>
+            <div class="sc-row">
+                <span class="sc-key">D</span
+                ><span class="sc-desc">Toggle Dark Mode</span>
+            </div>
+        </div>
+        <button
+            class="sc-toggle-btn"
+            id="scToggleBtn"
+            onclick="showShortcuts()"
+            style="display: block"
+        >
+            ⌨️ Shortcuts
+        </button>
+ 
+        <!-- TOAST NOTIFICATION -->
+        <div class="sc-toast" id="scToast"></div>
+ 
+        <!-- SHARE MODAL -->
+        <div class="share-modal" id="shareModal">
+            <div class="share-content">
+                <button class="close-modal" onclick="closeShareModal()">
+                    ✕
+                </button>
+                <h3>🎉 Share Your Score!</h3>
+                <div class="share-preview">
+                    <h4>🐰 Rabbit Quiz Results</h4>
+                    <div class="score" id="shareScore">5/5</div>
+                    <p id="shareMessage">Perfect! You are a Rabbit Expert!</p>
+                </div>
+                <div class="share-buttons">
+                    <button
+                        class="share-btn twitter"
+                        onclick="shareToTwitter()"
+                    >
+                        🐦 Twitter
+                    </button>
+                    <button
+                        class="share-btn facebook"
+                        onclick="shareToFacebook()"
+                    >
+                        📘 Facebook
+                    </button>
+                    <button
+                        class="share-btn whatsapp"
+                        onclick="shareToWhatsApp()"
+                    >
+                        💬 WhatsApp
+                    </button>
+                    <button class="share-btn copy" onclick="copyShareText()">
+                        📋 Copy Text
+                    </button>
+                </div>
+            </div>
+        </div>
+ 
+        <header>
+            <div class="logo">🐰 <span>Rabbit</span> World</div>
+            <div class="header-controls">
+                <div class="lang-btns">
+                    <button class="lang-btn active" onclick="setLang('en', this)">
+                        EN
+                    </button>
+                    <button class="lang-btn" onclick="setLang('bn', this)">
+                        বাংলা
+                    </button>
+                </div>
+                <button
+                    class="theme-toggle"
+                    onclick="toggleTheme()"
+                    id="themeToggle"
+                    title="Toggle Dark Mode"
+                >
+                    🌙
+                </button>
+            </div>
+        </header>
+ 
+        <!-- PAGE: LOGIN -->
+        <div id="page-login">
+            <div class="card">
+                <h2>🐰 Welcome to Tamim Ashraf's Rabbit World!</h2>
+                <p class="sub">
+                    Please login to explore the wonderful world of rabbits
+                </p>
+ 
+                <div class="input-group">
+                    <label>Username</label>
+                    <input
+                        id="inp-username"
+                        type="text"
+                        placeholder="Enter your username..."
+                    />
+                </div>
+ 
+                <div class="input-group">
+                    <label>Email</label>
+                    <input
+                        id="inp-email"
+                        type="email"
+                        placeholder="Enter your email..."
+                    />
+                </div>
+ 
+                    <div id="learn-section" style="display: none;">
+                    <p class="sub">
+                        Are you here to learn about Rabbit?
+                    </p>
+                    <div class="btn-row" style="gap: 10px; margin-top: 10px;">
+                        <button class="btn btn-primary" type="button" onclick="chooseLearnAnswer('yes')">
+                            Yes
+                        </button>
+                        <button class="btn btn-secondary" type="button" onclick="chooseLearnAnswer('no')">
+                            No
+                        </button>
+                    </div>
+                    <div id="learn-response" style="display: none; margin-top: 14px;">
+                        <p id="learn-response-text" class="sub"></p>
+                        <button id="learn-ok-button" class="btn btn-primary" type="button" onclick="confirmLearnAnswer()" style="display: none; margin-top: 10px;">
+                            OK
+                        </button>
+                    </div>
+                </div>
+ 
+                <div class="checkbox-group">
+                    <input type="checkbox" id="remember-me" />
+                    <label for="remember-me">Remember Me</label>
+                </div>
+ 
+                <p id="login-error" class="error-msg"></p>
+                <p id="login-success" class="success-msg"></p>
+ 
+                <button
+                    class="btn btn-primary"
+                    onclick="validateLogin()"
+                    id="ok-btn"
+                    type="button"
+                >
+                    OK - Validate My Details
+                </button>
+ 
+                <div
+                    id="enter-btn-container"
+                    style="margin-top: 16px; display: none"
+                >
+                    <button class="btn btn-success" onclick="performLogin()" type="button">
+                        🚀 ENTER RABBIT WORLD
+                    </button>
+                </div>
+ 
+                <button class="btn-shortcut" onclick="openSecretCodeModal()">
+                    Secret Code
+                </button>
+            </div>
+        </div>
+ 
+        <!-- PAGE: HOME -->
+        <div id="page-home">
+            <div class="card wide">
+                <div class="welcome-banner">
+                    <h2 id="t-welcome">
+                        Learn about Rabbit 🐰<span id="display-name"></span>
+                    </h2>
+                </div>
+                <img
+                    class="rabbit-img"
+                    src="rabbit.jpg"
+                    alt="Cute Rabbit"
+                    onerror="
+                        this.src =
+                            'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Oryctolagus_cuniculus_Rcdo.jpg/480px-Oryctolagus_cuniculus_Rcdo.jpg'
+                    "
+                />
+                <div id="voice-bar" class="voice-bar off">
+                    <div class="pulse-dot"></div>
+                    <span id="t-voice-status">Voice is off</span>
+                </div>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="ic-title" id="t-diet-title">
+                            🥕 Diet & Behavior
+                        </div>
+                        <p id="t-diet"></p>
+                    </div>
+                    <div class="info-card">
+                        <div class="ic-title" id="t-bio-title">🧬 Biology</div>
+                        <p id="t-bio"></p>
+                    </div>
+                    <div class="info-card">
+                        <div class="ic-title" id="t-breed-title">
+                            🍼 Breeding
+                        </div>
+                        <p id="t-breed"></p>
+                    </div>
+                    <div class="info-card">
+                        <div class="ic-title" id="t-hab-title">🏠 Habitat</div>
+                        <p id="t-hab"></p>
+                    </div>
+                    <div class="info-card" style="grid-column: span 2">
+                        <div class="ic-title" id="t-dist-title">
+                            🐇 Rabbit vs Hare
+                        </div>
+                        <p id="t-dist"></p>
+                    </div>
+                </div>
+                <div class="btn-row">
+                    <button
+                        class="btn btn-mint"
+                        id="voice-btn"
+                        onclick="toggleVoice()"
+                    >
+                        🔊 <span id="t-voice-btnx">Read for me</span>
+                    </button>
+                    <button
+                        class="btn btn-secondary"
+                        onclick="showPage('page-videos')"
+                    >
+                        🎬 <span id="t-video-btn">Rabbit Videos</span>
+                    </button>
+                    <button
+                        class="btn btn-primary"
+                        style="
+                            background: linear-gradient(
+                                135deg,
+                                #8b5cf6,
+                                #ec4899
+                            );
+                        "
+                        onclick="showPage('page-quiz')"
+                    >
+                        ❓ <span id="t-quiz-btn">Take Quiz</span>
+                    </button>
+                    <button
+                        class="btn btn-success"
+                        onclick="showPage('page-ai')"
+                    >
+                        🤖 AI
+                    </button>
+                    <button class="btn btn-danger" onclick="doLogout()">
+                        🚪 <span id="t-logout">Logout</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+ 
+        <!-- PAGE: VIDEOS -->
+        <div id="page-videos">
+            <div class="card">
+                <h2 id="t-vid-title">🎬 Rabbit Videos</h2>
+                <p class="sub" id="t-vid-sub">Choose a topic to watch</p>
+                <div class="video-options">
+                    <a
+                        class="video-option"
+                        href="https://www.youtube.com/results?search_query=what+do+rabbits+eat"
+                        target="_blank"
+                    >
+                        <div class="vo-num vo-num-1">1</div>
+                        <div class="vo-text">
+                            <strong id="t-v1">🥕 What Rabbits Eat</strong
+                            ><span id="t-v1-sub"
+                                >Diet, food & feeding habits</span
+                            >
+                        </div>
+                    </a>
+                    <a
+                        class="video-option"
+                        href="https://www.youtube.com/results?search_query=rabbit+farming"
+                        target="_blank"
+                    >
+                        <div class="vo-num vo-num-2">2</div>
+                        <div class="vo-text">
+                            <strong id="t-v2">🌾 Rabbit Farming</strong
+                            ><span id="t-v2-sub"
+                                >Farming tips & techniques</span
+                            >
+                        </div>
+                    </a>
+                    <a
+                        class="video-option"
+                        href="https://www.youtube.com/results?search_query=what+to+feed+baby+rabbit"
+                        target="_blank"
+                    >
+                        <div class="vo-num vo-num-3">3</div>
+                        <div class="vo-text">
+                            <strong id="t-v3">🍼 Feeding Baby Rabbits</strong
+                            ><span id="t-v3-sub"
+                                >What to feed your baby bunny</span
+                            >
+                        </div>
+                    </a>
+                </div>
+                <div class="btn-row">
+                    <button
+                        class="btn btn-ghost"
+                        onclick="showPage('page-home')"
+                    >
+                        ← <span id="t-back">Back to Home</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+ 
+        <!-- PAGE: QUIZ -->
+        <div id="page-quiz">
+            <div class="card wide">
+                <h2 id="t-quiz-title">❓ Rabbit Quiz</h2>
+                <p class="sub" id="t-quiz-sub">
+                    Test your knowledge! (Medium Difficulty)
+                </p>
+ 
+                <div class="quiz-container" id="quiz-form">
+                    <!-- Q1 -->
+                    <div class="question-card">
+                        <div class="q-text">
+                            <span>1.</span> What is the joyful leap rabbits do
+                            when they are happy called?
+                        </div>
+                        <div class="options-grid">
+                            <label class="option-label"
+                                ><input type="radio" name="q1" value="a" /> A) A
+                                Hoppy</label
+                            >
+                            <label class="option-label"
+                                ><input type="radio" name="q1" value="b" /> B) A
+                                Binky</label
+                            >
+                            <label class="option-label"
+                                ><input type="radio" name="q1" value="c" /> C) A
+                                Zoomie</label
+                            >
+                        </div>
+                    </div>
+ 
+                    <!-- Q2 -->
+                    <div class="question-card">
+                        <div class="q-text">
+                            <span>2.</span> Why can't rabbits eat only carrots
+                            as their main diet?
+                        </div>
+                        <div class="options-grid">
+                            <label class="option-label"
+                                ><input type="radio" name="q2" value="a" /> A)
+                                Carrots are too hard</label
+                            >
+                            <label class="option-label"
+                                ><input type="radio" name="q2" value="b" /> B)
+                                Carrots are high in sugar</label
+                            >
+                            <label class="option-label"
+                                ><input type="radio" name="q2" value="c" /> C)
+                                Carrots are poisonous</label
+                            >
+                        </div>
+                    </div>
+ 
+                    <!-- Q3 -->
+                    <div class="question-card">
+                        <div class="q-text">
+                            <span>3.</span> What is a group of wild rabbits
+                            called?
+                        </div>
+                        <div class="options-grid">
+                            <label class="option-label"
+                                ><input type="radio" name="q3" value="a" /> A) A
+                                Herd</label
+                            >
+                            <label class="option-label"
+                                ><input type="radio" name="q3" value="b" /> B) A
+                                Pack</label
+                            >
+                            <label class="option-label"
+                                ><input type="radio" name="q3" value="c" /> C) A
+                                Colony</label
+                            >
+                        </div>
+                    </div>
+ 
+                    <!-- Q4 -->
+                    <div class="question-card">
+                        <div class="q-text">
+                            <span>4.</span> How many degrees can a rabbit see
+                            without moving its head?
+                        </div>
+                        <div class="options-grid">
+                            <label class="option-label"
+                                ><input type="radio" name="q4" value="a" /> A)
+                                180°</label
+                            >
+                            <label class="option-label"
+                                ><input type="radio" name="q4" value="b" /> B)
+                                270°</label
+                            >
+                            <label class="option-label"
+                                ><input type="radio" name="q4" value="c" /> C)
+                                Nearly 360°</label
+                            >
+                        </div>
+                    </div>
+ 
+                    <!-- Q5 -->
+                    <div class="question-card">
+                        <div class="q-text">
+                            <span>5.</span> What is the unique thing about baby
+                            hares compared to baby rabbits?
+                        </div>
+                        <div class="options-grid">
+                            <label class="option-label"
+                                ><input type="radio" name="q5" value="a" /> A)
+                                They are born with fur and open eyes</label
+                            >
+                            <label class="option-label"
+                                ><input type="radio" name="q5" value="b" /> B)
+                                They are born smaller</label
+                            >
+                            <label class="option-label"
+                                ><input type="radio" name="q5" value="c" /> C)
+                                They cannot jump</label
+                            >
+                        </div>
+                    </div>
+ 
+                    <div class="btn-row">
+                        <button class="btn btn-primary" onclick="checkQuiz()">
+                            ✅ Submit Answers
+                        </button>
+                        <button
+                            class="btn btn-ghost"
+                            onclick="showPage('page-home')"
+                        >
+                            ← Cancel
+                        </button>
+                    </div>
+                </div>
+ 
+                <!-- RESULT BOX -->
+                <div id="quiz-result" class="result-box">
+                    <h3>Quiz Complete! 🐰</h3>
+                    <div class="score-big" id="score-display">0/5</div>
+                    <p class="score-msg" id="score-message">Good try!</p>
+                    <div class="btn-row">
+                        <button
+                            class="btn btn-share"
+                            onclick="openShareModal()"
+                        >
+                            📤 Share Score
+                        </button>
+                        <button class="btn btn-secondary" onclick="resetQuiz()">
+                            🔄 Try Again
+                        </button>
+                        <button
+                            class="btn btn-ghost"
+                            onclick="showPage('page-home')"
+                        >
+                            🏠 Back Home
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+ 
+        <!-- PAGE: AI -->
+        <div id="page-ai">
+            <div class="card">
+                <h2>🤖 AI Assistant</h2>
+                <p class="sub">
+                    What do you want to learn about? Are you want to learn about
+                    Rabbit or this website? Tell me.
+                </p>
+                <div class="input-group">
+                    <label>Your Question</label>
+                    <input
+                        id="ai-input"
+                        type="text"
+                        placeholder="Ask about rabbits or the website..."
+                    />
+                </div>
+                <button class="btn btn-primary" onclick="askAI()">
+                    Ask AI
+                </button>
+                <div id="ai-response" class="ai-response"></div>
+                <div class="btn-row">
+                    <button
+                        class="btn btn-ghost"
+                        onclick="showPage('page-home')"
+                    >
+                        🏠 Back Home
+                    </button>
+                </div>
+            </div>
+        </div>
+ 
+        <!-- SECRET CODE MODAL -->
+        <div id="secret-code-modal" class="modal" style="display: none">
+            <div class="modal-content">
+                <h3>🔐 Enter Secret Code</h3>
+                <p>Give me a secret code</p>
+                <div class="input-group">
+                    <input
+                        id="secret-code-input"
+                        type="password"
+                        placeholder="Enter secret code..."
+                        onkeypress="
+                            if (event.key === 'Enter') validateSecretCode();
+                        "
+                    />
+                </div>
+                <div
+                    id="secret-error"
+                    style="
+                        color: #ff4757;
+                        font-size: 0.9rem;
+                        margin-bottom: 10px;
+                        display: none;
+                    "
+                ></div>
+                <div class="btn-row">
+                    <button
+                        class="btn btn-primary"
+                        onclick="validateSecretCode()"
+                    >
+                        Submit
+                    </button>
+                    <button
+                        class="btn btn-ghost"
+                        onclick="closeSecretCodeModal()"
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+ 
+        <script>
+            let lang = "en",
+                userName = "",
+                voiceOn = false,
+                voices = [];
+            let currentScore = 0,
+                currentTotal = 5,
+                currentMessage = "";
+            let isValidated = false;
+            let isLoggedIn = false;
+            let canEnter = false;
+            let learnAnswer = "";
+            let passwordAttempts = 0;
+ 
+            // Correct Answers: 1:b, 2:b, 3:c, 4:c, 5:a
+            const QUIZ_ANSWERS = {
+                q1: "b",
+                q2: "b",
+                q3: "c",
+                q4: "c",
+                q5: "a",
+            };
+ 
+            const T = {
+                en: {
+                    welcome: "Welcome,",
+                    voiceOn: "Stop Reading",
+                    voiceOff: "Read for me",
+                    voiceStatusOn: "Reading for you",
+                    voiceStatusOff: "Reading is off",
+                    videoBtn: "Rabbit Videos",
+                    quizBtn: "Take Quiz",
+                    logout: "Logout",
+                    vidTitle: "🎬 Rabbit Videos",
+                    vidSub: "Choose a topic to watch",
+                    v1: "🥕 What Rabbits Eat",
+                    v1sub: "Diet, food & feeding habits",
+                    v2: "🌾 Rabbit Farming",
+                    v2sub: "Farming tips & techniques",
+                    v3: "🍼 Feeding Baby Rabbits",
+                    v3sub: "What to feed your baby bunny",
+                    back: "Back to Home",
+                    quizTitle: "❓ Rabbit Quiz",
+                    quizSub: "Test your knowledge! (Medium Difficulty)",
+                    dietTitle: "🥕 Diet & Behavior",
+                    bioTitle: "🧬 Biology",
+                    breedTitle: "🍼 Breeding",
+                    habTitle: "🏠 Habitat",
+                    distTitle: "🐇 Rabbit vs Hare",
+                    diet: 'Rabbits are herbivores that eat grass, hay, leafy greens, and vegetables. They eat most actively at dawn and dusk. When very happy, they leap and twist in the air — this joyful move is called a "binky"!',
+                    bio: "Rabbits have incredibly powerful hearing and nearly 360° vision. Their ears swivel independently to detect sounds from all directions. Uniquely, they cannot vomit, so they must always eat safe, clean food.",
+                    breed: "A female rabbit is called a doe, a male is a buck, and baby rabbits are called kits. Rabbits can give birth to litters of 4–12 kits, making them among nature's most prolific parents.",
+                    hab: "Wild rabbits live in forests, grasslands, meadows, and deserts. They dig underground tunnel networks called burrows or warrens, which protect them from predators and weather.",
+                    dist: "Rabbits are smaller than hares and have shorter ears. Baby rabbits (kits) are born blind, deaf, and furless, while baby hares are born fully furred, with open eyes — ready to run!",
+                    hint: "Hint: 3 letters, starting with <span>w 😎</span>",
+                },
+                bn: {
+                    welcome: "স্বাগতম,",
+                    voiceOn: "পড়া বন্ধ করুন",
+                    voiceOff: "আমার জন্য পড়ুন",
+                    voiceStatusOn: "পড়া হচ্ছে",
+                    voiceStatusOff: "পড়া বন্ধ",
+                    videoBtn: "খরগোশের ভিডিও",
+                    quizBtn: "কুইজ দিন",
+                    logout: "লগআউট",
+                    vidTitle: "🎬 খরগোশের ভিডিও",
+                    vidSub: "একটি বিষয় বেছে নিন",
+                    v1: "🥕 খরগোশ কী খায়",
+                    v1sub: "খাদ্য ও খাওয়ার অভ্যাস",
+                    v2: "🌾 খরগোশ চাষ",
+                    v2sub: "চাষের টিপস ও কৌশল",
+                    v3: "🍼 বাচ্চা খরগোশকে কী খাওয়াবেন",
+                    v3sub: "শিশু খরগোশের খাবার",
+                    back: "হোমে ফিরুন",
+                    quizTitle: "❓ খরগোশ কুইজ",
+                    quizSub: "আপনার জ্ঞান পরীক্ষা করুন!",
+                    dietTitle: "🥕 খাদ্য ও আচরণ",
+                    bioTitle: "🧬 জীববিজ্ঞান",
+                    breedTitle: "🍼 প্রজনন",
+                    habTitle: "🏠 বাসস্থান",
+                    distTitle: "🐇 খরগোশ বনাম হেয়ার",
+                    diet: 'খরগোশ তৃণভোজী প্রাণী। এরা ঘাস, খড়, সবুজ পাতা ও সবজি খায়। সকাল ও সন্ধ্যায় সবচেয়ে বেশি সক্রিয় থাকে। আনন্দিত হলে লাফিয়ে বাতাসে মোচড় দেয় — এই মজার আন্দোলনকে "বিংকি" বলা হয়!',
+                    bio: "খরগোশের শ্রবণশক্তি অসাধারণ এবং প্রায় ৩৬০° দৃষ্টিশক্তি রয়েছে। এদের কান স্বাধীনভাবে ঘুরতে পারে। বিশেষভাবে, এরা বমি করতে পারে না।",
+                    breed: "মেয়ে খরগোশকে ডো, ছেলে খরগোশকে বাক এবং বাচ্চা খরগোশকে কিট বলা হয়। এক বারে ৪–১২টি বাচ্চা দিতে পারে।",
+                    hab: "বন্য খরগোশ বন, ঘাসভূমি, মাঠ ও মরুভূমিতে বাস করে। মাটির নিচে সুড়ঙ্গ খুঁড়ে বাস করে।",
+                    dist: "খরগোশ সাধারণ হেয়ারের চেয়ে ছোট এবং কান ছোট। বাচ্চা খরগোশ অন্ধ, বধির ও লোমহীন জন্মায়।",
+                    hint: "ইঙ্গিত: ৩ অক্ষর, <span>w 😎</span> দিয়ে শুরু",
+                },
+            };
+ 
+            /* ---- DARK MODE ---- */
+            function toggleTheme() {
+                const html = document.documentElement;
+                const currentTheme = html.getAttribute("data-theme");
+                const newTheme = currentTheme === "dark" ? "light" : "dark";
+                html.setAttribute("data-theme", newTheme);
+ 
+                const toggle = document.getElementById("themeToggle");
+                toggle.textContent = newTheme === "dark" ? "☀️" : "🌙";
+ 
+                localStorage.setItem("theme", newTheme);
+                toast(
+                    newTheme === "dark"
+                        ? "🌙 Dark mode enabled"
+                        : "☀️ Light mode enabled",
+                );
+            }
+ 
+            function loadTheme() {
+                const savedTheme = localStorage.getItem("theme") || "light";
+                document.documentElement.setAttribute("data-theme", savedTheme);
+                const toggle = document.getElementById("themeToggle");
+                if (toggle) {
+                    toggle.textContent = savedTheme === "dark" ? "☀️" : "🌙";
+                }
+            }
+ 
+            /* ---- PAGES ---- */
+            function showPage(id) {
+                [
+                    "page-login",
+                    "page-home",
+                    "page-videos",
+                    "page-quiz",
+                    "page-ai",
+                ].forEach((p) => {
+                    document.getElementById(p).style.display =
+                        p === id ? "block" : "none";
+                });
+                if (id === "page-quiz") resetQuiz();
+            }
+ 
+            /* ---- LANG ---- */
+            function setLang(l, button) {
+                lang = l;
+                document
+                    .querySelectorAll(".lang-btn")
+                    .forEach((b) => b.classList.remove("active"));
+                if (button && button.classList) {
+                    button.classList.add("active");
+                }
+                applyTexts();
+            }
+ 
+            function applyTexts() {
+                const t = T[lang];
+                setText("t-voice-btnx", voiceOn ? t.voiceOn : t.voiceOff);
+                setText("t-video-btn", t.videoBtn);
+                setText("t-quiz-btn", t.quizBtn);
+                setText("t-logout", t.logout);
+                setText("t-vid-title", t.vidTitle);
+                setText("t-vid-sub", t.vidSub);
+                setText("t-v1", t.v1);
+                setText("t-v1-sub", t.v1sub);
+                setText("t-v2", t.v2);
+                setText("t-v2-sub", t.v2sub);
+                setText("t-v3", t.v3);
+                setText("t-v3-sub", t.v3sub);
+                setText("t-back", t.back);
+                setText("t-quiz-title", t.quizTitle);
+                setText("t-quiz-sub", t.quizSub);
+                setText("t-diet-title", t.dietTitle);
+                setText("t-diet", t.diet);
+                setText("t-bio-title", t.bioTitle);
+                setText("t-bio", t.bio);
+                setText("t-breed-title", t.breedTitle);
+                setText("t-breed", t.breed);
+                setText("t-hab-title", t.habTitle);
+                setText("t-hab", t.hab);
+                setText("t-dist-title", t.distTitle);
+                setText("t-dist", t.dist);
+                document.getElementById("t-hint").innerHTML = t.hint;
+                if (userName) setText("t-welcome", t.welcome + " ");
+                setText(
+                    "t-voice-status",
+                    voiceOn ? t.voiceStatusOn : t.voiceStatusOff,
+                );
+                document.getElementById("voice-bar").className =
+                    "voice-bar" + (voiceOn ? "" : " off");
+            }
+ 
+            function setText(id, val) {
+                const el = document.getElementById(id);
+                if (el) el.textContent = val;
+            }
+ 
+            /* ---- LOGIN SYSTEM ---- */
+            function validateLogin() {
+                const username = document
+                    .getElementById("inp-username")
+                    .value.trim();
+                const email = document.getElementById("inp-email").value.trim();
+                const errorMsg = document.getElementById("login-error");
+                const successMsg = document.getElementById("login-success");
+                const enterBtnContainer = document.getElementById(
+                    "enter-btn-container",
+                );
+                const learnSection = document.getElementById("learn-section");
+                const learnResponse = document.getElementById("learn-response");
+                const learnOkButton = document.getElementById("learn-ok-button");
+ 
+                // Hide previous messages and buttons
+                errorMsg.style.display = "none";
+                successMsg.style.display = "none";
+                enterBtnContainer.style.display = "none";
+                learnSection.style.display = "none";
+                learnResponse.style.display = "none";
+                learnOkButton.style.display = "none";
+                canEnter = false;
+                learnAnswer = "";
+ 
+                if (!username || !email) {
+                    errorMsg.textContent =
+                        "Please give your Name and Email to continue.";
+                    errorMsg.style.display = "block";
+                    isValidated = false;
+                    return;
+                }
+ 
+                if (!email.includes("@") || !email.includes(".")) {
+                    errorMsg.textContent =
+                        "Please give a valid email address.";
+                    errorMsg.style.display = "block";
+                    isValidated = false;
+                    return;
+                }
+ 
+                isValidated = true;
+                successMsg.textContent =
+                    "✅ Name and Email accepted. Are you here to learn about Rabbit?";
+                successMsg.style.display = "block";
+                learnSection.style.display = "block";
+                toast("✅ Details accepted. Choose Yes or No.");
+            }
+ 
+            function chooseLearnAnswer(answer) {
+                const learnResponse = document.getElementById("learn-response");
+                const learnResponseText = document.getElementById(
+                    "learn-response-text",
+                );
+                const learnOkButton = document.getElementById("learn-ok-button");
+                const enterBtnContainer = document.getElementById(
+                    "enter-btn-container",
+                );
+ 
+                learnResponse.style.display = "block";
+                enterBtnContainer.style.display = "none";
+                canEnter = false;
+                learnAnswer = answer;
+ 
+                if (answer === "yes") {
+                    learnResponseText.textContent =
+                        "Great! Click OK to continue.";
+                    learnOkButton.style.display = "inline-block";
+                } else {
+                    learnResponseText.textContent =
+                        "No, no, no. Then go to another Rabbit website. My website is only for learners.";
+                    learnOkButton.style.display = "none";
+                }
+            }
+ 
+            function confirmLearnAnswer() {
+                if (learnAnswer !== "yes") {
+                    toast("❌ Please choose Yes to proceed.");
+                    return;
+                }
+                const learnResponseText = document.getElementById(
+                    "learn-response-text",
+                );
+                const learnOkButton = document.getElementById("learn-ok-button");
+                const enterBtnContainer = document.getElementById(
+                    "enter-btn-container",
+                );
+ 
+                learnResponseText.textContent = "OK! Click ENTER to proceed.";
+                learnOkButton.style.display = "none";
+                enterBtnContainer.style.display = "block";
+                canEnter = true;
+            }
+ 
+            function performLogin() {
+                if (!isValidated) {
+                    toast("❌ Please validate your Name and Email first!");
+                    return;
+                }
+                if (!canEnter) {
+                    toast("❌ Please answer Yes and click OK to enter.");
+                    return;
+                }
+ 
+                const username = document
+                    .getElementById("inp-username")
+                    .value.trim();
+                const email = document.getElementById("inp-email").value.trim();
+                const rememberMe =
+                    document.getElementById("remember-me").checked;
+ 
+                // Save to session (always remember you're logged in during this session)
+                localStorage.setItem("isLoggedIn", "true");
+                localStorage.setItem("username", username);
+ 
+                // Save to localStorage if "Remember Me" is checked
+                if (rememberMe) {
+                    localStorage.setItem("rememberedUsername", username);
+                    localStorage.setItem("rememberedEmail", email);
+                    toast("🐰 You will be remembered!");
+                } else {
+                    // Clear remembered data if unchecked
+                    localStorage.removeItem("rememberedUsername");
+                    localStorage.removeItem("rememberedEmail");
+                }
+ 
+                // Set user as logged in
+                isLoggedIn = true;
+                userName = username;
+                document.getElementById("display-name").textContent = userName;
+ 
+                // Go to home page
+                showPage("page-home");
+                applyTexts();
+                toast("🎉 Welcome to Rabbit World, " + username + "!");
+            }
+ 
+            function doLogout() {
+                speechSynthesis.cancel();
+                voiceOn = false;
+                userName = "";
+                isLoggedIn = false;
+                isValidated = false;
+ 
+                // Clear session
+                localStorage.removeItem("isLoggedIn");
+                localStorage.removeItem("username");
+ 
+                // Clear input fields
+                document.getElementById("inp-username").value = "";
+                document.getElementById("inp-email").value = "";
+                document.getElementById("remember-me").checked = false;
+                document.getElementById("login-error").style.display = "none";
+                document.getElementById("login-success").style.display = "none";
+                document.getElementById("learn-section").style.display = "none";
+                document.getElementById("learn-response").style.display = "none";
+                document.getElementById("learn-ok-button").style.display = "none";
+                canEnter = false;
+                learnAnswer = "";
+                document.getElementById("enter-btn-container").style.display =
+                    "none";
+ 
+                showPage("page-login");
+                loadRememberedData();
+                toast("🚪 Logged out!");
+            }
+ 
+            function loadRememberedData() {
+                const rememberedUsername =
+                    localStorage.getItem("rememberedUsername");
+                const rememberedEmail = localStorage.getItem("rememberedEmail");
+ 
+                if (rememberedUsername) {
+                    document.getElementById("inp-username").value =
+                        rememberedUsername;
+                }
+                if (rememberedEmail) {
+                    document.getElementById("inp-email").value =
+                        rememberedEmail;
+                }
+                // Password is NEVER remembered for security
+            }
+ 
+            function checkLoginStatus() {
+                // Check if user is logged in (session-based)
+                const loggedIn = localStorage.getItem("isLoggedIn");
+                const savedUsername = localStorage.getItem("username");
+ 
+                if (loggedIn === "true" && savedUsername) {
+                    // User is still logged in
+                    isLoggedIn = true;
+                    userName = savedUsername;
+                    document.getElementById("display-name").textContent =
+                        userName;
+                    showPage("page-home");
+                    applyTexts();
+                } else {
+                    // Not logged in, show login page
+                    showPage("page-login");
+                    loadRememberedData();
+                }
+            }
+ 
+            /* ---- VOICE ---- */
+            speechSynthesis.onvoiceschanged = () => {
+                voices = speechSynthesis.getVoices();
+            };
+            function getBestVoice() {
+                voices = speechSynthesis.getVoices();
+                if (lang === "bn")
+                    return (
+                        voices.find((v) => v.lang.startsWith("bn")) || voices[0]
+                    );
+                return (
+                    voices.find((v) =>
+                        v.name.includes("Google UK English Male"),
+                    ) ||
+                    voices.find((v) => v.name.includes("Daniel")) ||
+                    voices.find((v) => v.name.includes("Alex")) ||
+                    voices.find((v) => v.name.includes("Fred")) ||
+                    voices.find((v) => v.name.includes("Tom")) ||
+                    voices.find((v) =>
+                        /male|david|mark|james|oliver/i.test(v.name),
+                    ) ||
+                    voices.find(
+                        (v) => v.name.includes("Google") || v.lang === "en-US",
+                    ) ||
+                    voices[0]
+                );
+            }
+ 
+            function toggleVoice() {
+                const t = T[lang];
+                const voiceBar = document.getElementById("voice-bar");
+                const voiceStatus = document.getElementById("t-voice-status");
+
+                if (voiceOn) {
+                    speechSynthesis.cancel();
+                    voiceOn = false;
+                    if (voiceStatus) voiceStatus.textContent = t.voiceStatusOff;
+                    if (voiceBar) voiceBar.className = "voice-bar off";
+                    applyTexts();
+                    toast("🔇 Voice stopped");
+                    return;
+                }
+
+                const fullText = [t.diet, t.bio, t.breed, t.hab, t.dist].join(
+                    ". ",
+                );
+                const msg = new SpeechSynthesisUtterance(fullText);
+                const v = getBestVoice();
+                if (v) msg.voice = v;
+                msg.rate = 0.7;
+                msg.pitch = 1.8;
+                msg.lang = lang === "bn" ? "bn-BD" : "en-US";
+                msg.onstart = () => {
+                    if (!voiceOn) {
+                        voiceOn = true;
+                        if (voiceStatus) voiceStatus.textContent = t.voiceStatusOn;
+                        if (voiceBar) voiceBar.className = "voice-bar";
+                        applyTexts();
+                    }
+                };
+                msg.onend = () => {
+                    voiceOn = false;
+                    if (voiceStatus) voiceStatus.textContent = t.voiceStatusOff;
+                    if (voiceBar) voiceBar.className = "voice-bar off";
+                    applyTexts();
+                };
+                speechSynthesis.speak(msg);
+                voiceOn = true;
+                if (voiceStatus) voiceStatus.textContent = t.voiceStatusOn;
+                if (voiceBar) voiceBar.className = "voice-bar";
+                applyTexts();
+                toast("🔊 Voice started!");
+            }
+ 
+            /* ---- QUIZ LOGIC ---- */
+            function checkQuiz() {
+                let score = 0;
+                let total = 5;
+ 
+                for (let i = 1; i <= total; i++) {
+                    const selected = document.querySelector(
+                        `input[name="q${i}"]:checked`,
+                    );
+                    if (selected && selected.value === QUIZ_ANSWERS[`q${i}`]) {
+                        score++;
+                    }
+                }
+ 
+                currentScore = score;
+                currentTotal = total;
+ 
+                document.getElementById("quiz-form").style.display = "none";
+                document.getElementById("quiz-result").style.display = "block";
+                document.getElementById("score-display").textContent =
+                    `${score}/${total}`;
+ 
+                let msg = "";
+                if (score === 5) msg = "Perfect! You are a Rabbit Expert! 🏆🐰";
+                else if (score >= 3)
+                    msg = "Great job! You know your bunnies well! 🥕";
+                else
+                    msg =
+                        "Keep learning! Rabbits are fascinating creatures. 📚";
+ 
+                currentMessage = msg;
+                document.getElementById("score-message").textContent = msg;
+                toast(`Quiz Score: ${score}/${total}`);
+            }
+ 
+            function resetQuiz() {
+                document.getElementById("quiz-form").style.display = "block";
+                document.getElementById("quiz-result").style.display = "none";
+                document
+                    .querySelectorAll('input[type="radio"]')
+                    .forEach((el) => (el.checked = false));
+            }
+ 
+            /* ---- SHARE FUNCTIONALITY ---- */
+            function openShareModal() {
+                document.getElementById("shareScore").textContent =
+                    `${currentScore}/${currentTotal}`;
+                document.getElementById("shareMessage").textContent =
+                    currentMessage;
+                document.getElementById("shareModal").classList.add("show");
+                toast("📤 Share your results!");
+            }
+ 
+            function closeShareModal() {
+                document.getElementById("shareModal").classList.remove("show");
+            }
+ 
+            function getShareText() {
+                return `🐰 I scored ${currentScore}/${currentTotal} on the Rabbit Quiz! ${currentMessage}\n\nTry it yourself at Rabbit World! 🎯`;
+            }
+ 
+            function shareToTwitter() {
+                const text = encodeURIComponent(getShareText());
+                const url = `https://twitter.com/intent/tweet?text=${text}`;
+                window.open(url, "_blank");
+                toast("🐦 Opening Twitter...");
+            }
+ 
+            function shareToFacebook() {
+                const text = encodeURIComponent(getShareText());
+                const url = `https://www.facebook.com/sharer/sharer.php?quote=${text}`;
+                window.open(url, "_blank");
+                toast("📘 Opening Facebook...");
+            }
+ 
+            function shareToWhatsApp() {
+                const text = encodeURIComponent(getShareText());
+                const url = `https://wa.me/?text=${text}`;
+                window.open(url, "_blank");
+                toast("💬 Opening WhatsApp...");
+            }
+ 
+            function copyShareText() {
+                const text = getShareText();
+                navigator.clipboard
+                    .writeText(text)
+                    .then(() => {
+                        toast("📋 Copied to clipboard!");
+                    })
+                    .catch(() => {
+                        const textarea = document.createElement("textarea");
+                        textarea.value = text;
+                        textarea.style.position = "fixed";
+                        textarea.style.opacity = "0";
+                        document.body.appendChild(textarea);
+                        textarea.select();
+                        document.execCommand("copy");
+                        document.body.removeChild(textarea);
+                        toast("📋 Copied to clipboard!");
+                    });
+            }
+ 
+            /* ---- AI ---- */
+            function askAI() {
+                const input = document
+                    .getElementById("ai-input")
+                    .value.trim()
+                    .toLowerCase();
+                const responseEl = document.getElementById("ai-response");
+ 
+                if (!input) {
+                    responseEl.textContent =
+                        "Please ask a question about rabbits or this website.";
+                    return;
+                }
+ 
+                let response = "";
+                if (input.includes("rabbit") || input.includes("খরগোশ")) {
+                    response =
+                        "Rabbits are amazing creatures! They are herbivores that eat grass, hay, and vegetables. They have powerful hearing and can see almost 360 degrees. Baby rabbits are called kits and are born blind. Rabbits can't vomit, so they need clean food. They live in burrows and are most active at dawn and dusk. When happy, they do 'binkies' - joyful leaps in the air!";
+                } else if (
+                    input.includes("website") ||
+                    input.includes("site") ||
+                    input.includes("tamim") ||
+                    input.includes("ওয়েবসাইট")
+                ) {
+                    response =
+                        "This website is Tamim Ashraf's Rabbit World! It's a fun educational site about rabbits with videos, quizzes, and information. Created by Tamim Ashraf to share knowledge about these adorable animals. Features include rabbit facts, videos, quizzes, and an AI assistant that knows about rabbits and the site.";
+                } else {
+                    response =
+                        "Sorry, I only know about rabbits and this website. Please ask about Rabbit or this website.";
+                }
+ 
+                responseEl.textContent = response;
+            }
+ 
+            /* ---- TOAST ---- */
+            let toastTimer;
+            function toast(msg) {
+                const el = document.getElementById("scToast");
+                el.textContent = msg;
+                el.classList.add("show");
+                clearTimeout(toastTimer);
+                toastTimer = setTimeout(
+                    () => el.classList.remove("show"),
+                    2000,
+                );
+            }
+ 
+            /* ---- SHORTCUT PANEL ---- */
+            function hideShortcuts() {
+                document.getElementById("scPanel").classList.add("hidden");
+                document.getElementById("scToggleBtn").style.display = "block";
+            }
+            function showShortcuts() {
+                document.getElementById("scPanel").classList.remove("hidden");
+                document.getElementById("scToggleBtn").style.display = "none";
+            }
+ 
+            /* ---- KEYBOARD SHORTCUTS ---- */
+            document.addEventListener("keydown", function (e) {
+                const tag = document.activeElement.tagName.toLowerCase();
+                if (tag === "input" || tag === "textarea") {
+                    return;
+                }
+ 
+                // Only allow shortcuts if logged in
+                if (!isLoggedIn) return;
+ 
+                switch (e.key.toLowerCase()) {
+                    case "r":
+                        if (
+                            document.getElementById("page-home").style
+                                .display === "block"
+                        )
+                            toggleVoice();
+                        break;
+                    case "v":
+                        if (
+                            document.getElementById("page-home").style
+                                .display === "block"
+                        ) {
+                            showPage("page-videos");
+                            toast("🎬 Videos page!");
+                        }
+                        break;
+                    case "q":
+                        if (
+                            document.getElementById("page-home").style
+                                .display === "block"
+                        ) {
+                            showPage("page-quiz");
+                            toast("❓ Quiz Time!");
+                        }
+                        break;
+                    case "a":
+                        if (
+                            document.getElementById("page-home").style
+                                .display === "block"
+                        ) {
+                            showPage("page-ai");
+                            toast("🤖 AI Assistant!");
+                        }
+                        break;
+                    case "h":
+                        if (
+                            document.getElementById("page-home").style
+                                .display !== "block"
+                        ) {
+                            showPage("page-home");
+                            applyTexts();
+                            toast("🏠 Home!");
+                        }
+                        break;
+                    case "l":
+                        doLogout();
+                        break;
+                    case "d":
+                        toggleTheme();
+                        break;
+                }
+            });
+ 
+            // Close modal on outside click
+            document
+                .getElementById("shareModal")
+                .addEventListener("click", function (e) {
+                    if (e.target === this) {
+                        closeShareModal();
+                    }
+                });
+ 
+            /* ---- SECRET CODE MODAL ---- */
+            function openSecretCodeModal() {
+                document.getElementById("secret-code-modal").style.display =
+                    "flex";
+                document.getElementById("secret-code-input").value = "";
+                document.getElementById("secret-error").style.display = "none";
+                document.getElementById("secret-code-input").focus();
+            }
+ 
+            function closeSecretCodeModal() {
+                document.getElementById("secret-code-modal").style.display =
+                    "none";
+                document.getElementById("secret-code-input").value = "";
+                document.getElementById("secret-error").style.display = "none";
+            }
+ 
+            function validateSecretCode() {
+                const secretCode = document
+                    .getElementById("secret-code-input")
+                    .value.trim();
+                const errorEl = document.getElementById("secret-error");
+ 
+                if (secretCode.toLowerCase() === "tamim123") {
+                    // Automatically log in
+                    closeSecretCodeModal();
+ 
+                    // Set default values
+                    const username = "Tamim Ashraf";
+                    const email = "tamim@gmail.com";
+ 
+                    // Set to session/localStorage
+                    localStorage.setItem("isLoggedIn", "true");
+                    localStorage.setItem("username", username);
+ 
+                    isLoggedIn = true;
+                    userName = username;
+                    document.getElementById("display-name").textContent =
+                        userName;
+ 
+                    // Go to home page
+                    showPage("page-home");
+                    applyTexts();
+                    toast("🎉 Welcome to Rabbit World, " + userName + "!");
+                } else {
+                    errorEl.textContent = "❌ Wrong secret code!";
+                    errorEl.style.display = "block";
+                    document.getElementById("secret-code-input").value = "";
+                }
+            }
+ 
+            // Close modal on outside click
+            document
+                .getElementById("secret-code-modal")
+                .addEventListener("click", function (e) {
+                    if (e.target === this) {
+                        closeSecretCodeModal();
+                    }
+                });
+ 
+            // INIT
+            loadTheme();
+            checkLoginStatus();
+            applyTexts();
+        </script>
+    </body>
+</html>
